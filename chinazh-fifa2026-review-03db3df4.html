@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>世界杯信息卡 – chinazh-fifa2026</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f4f8fb;
+      color: #1b2d3a;
+      line-height: 1.6;
+      padding: 1.5rem 1rem 2rem;
+      min-height: 100vh;
+    }
+
+    .wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* 主视觉 – 简洁网格背景 + 蓝绿色点缀 */
+    .hero {
+      background: linear-gradient(145deg, #0b2f3c 0%, #1a4a5c 100%);
+      border-radius: 2rem;
+      padding: 2.5rem 1.8rem;
+      margin-bottom: 2.5rem;
+      color: #ecf7fc;
+      box-shadow: 0 12px 30px rgba(8, 60, 70, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: -10%;
+      width: 140%;
+      height: 140%;
+      background-image:
+        linear-gradient(rgba(0, 200, 180, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 200, 180, 0.08) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero .accent {
+      display: inline-block;
+      background: #21b0a0;
+      color: #0a1f27;
+      font-weight: 500;
+      padding: 0.08rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 75%;
+      opacity: 0.92;
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        padding: 1.8rem 1.2rem;
+        border-radius: 1.5rem;
+      }
+
+      .hero h1 {
+        font-size: 1.7rem;
+      }
+
+      .hero p {
+        max-width: 100%;
+        font-size: 1rem;
+      }
+    }
+
+    /* 卡片网格 */
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (min-width: 580px) {
+      .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .card-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 1.5rem;
+      padding: 1.6rem 1.4rem 1.6rem 1.4rem;
+      box-shadow: 0 4px 12px rgba(0, 60, 70, 0.06);
+      transition: all 0.2s ease;
+      border-left: 6px solid #21b0a0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      box-shadow: 0 10px 28px rgba(0, 110, 110, 0.10);
+      transform: translateY(-3px);
+    }
+
+    .card-icon {
+      font-size: 2.2rem;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      color: #137a70;
+    }
+
+    .card h3 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: #0a2a33;
+      margin-bottom: 0.6rem;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #2d444f;
+      margin-bottom: 0.6rem;
+    }
+
+    .card .tag {
+      display: inline-block;
+      background: #def1ef;
+      color: #0f5047;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      margin-top: auto;
+      align-self: flex-start;
+    }
+
+    /* 用途卡片 (两列布局, 差异化) */
+    .section-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #0f6f64;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-label span {
+      background: #c7e4e0;
+      padding: 0.15rem 1rem;
+      border-radius: 20px;
+    }
+
+    .purpose-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+      margin-bottom: 2.8rem;
+    }
+
+    @media (min-width: 500px) {
+      .purpose-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .purpose-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 1.5rem 1.3rem;
+      border: 1px solid #d1e6e2;
+      transition: border 0.2s;
+    }
+
+    .purpose-item h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #09333f;
+      margin-bottom: 0.4rem;
+    }
+
+    .purpose-item p {
+      font-size: 0.9rem;
+      color: #34515e;
+    }
+
+    .highlight-link {
+      background: #ecf9f7;
+      border-radius: 1rem;
+      padding: 1rem 1.4rem;
+      margin: 2rem 0 1.5rem 0;
+      border-left: 5px solid #1c9b8a;
+      font-size: 1.05rem;
+    }
+
+    .highlight-link a {
+      color: #0e5f53;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+
+    .highlight-link a:hover {
+      color: #0c342e;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .faq-mini {
+      background: #ffffffdd;
+      border-radius: 1.5rem;
+      padding: 1.6rem 1.5rem;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.03);
+      margin-bottom: 2rem;
+    }
+
+    .faq-mini h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: #03313b;
+    }
+
+    .faq-mini details {
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid #cce0dc;
+      padding-bottom: 0.4rem;
+    }
+
+    .faq-mini summary {
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0.3rem 0;
+      color: #1d4957;
+    }
+
+    .faq-mini summary::-webkit-details-marker {
+      color: #1b998a;
+    }
+
+    .faq-mini details p {
+      font-size: 0.9rem;
+      padding: 0.3rem 0 0.5rem 0.5rem;
+      color: #2b4b57;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #55727e;
+      padding-top: 0.2rem;
+      border-top: 1px solid #c6dcd7;
+      margin-top: 0.8rem;
+    }
+
+    .footer-note span {
+      background: #dbeae7;
+      padding: 0.1rem 0.8rem;
+      border-radius: 30px;
+    }
+
+    /* 通用 */
+    a {
+      color: #117568;
+    }
+
+    a:visited {
+      color: #0c5c50;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <!-- HERO 主视觉 -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="accent">⚽ 信息卡片 · 2026</div>
+      <h1>世界杯 · 快速识别指南</h1>
+      <p>一站了解赛程架构、球队动态与观赛路径。chinazh-fifa2026 聚合多维度实用信息。</p>
+    </div>
+  </div>
+
+  <!-- 三张网格卡片: 特点/人群/场景 -->
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🏟️</div>
+      <h3>赛区与赛程</h3>
+      <p>主办城市分布、球场容量、分组抽签结果与关键日期。适合规划行程或关注淘汰赛走势的用户。</p>
+      <span class="tag">数据聚合</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🧑‍🤝‍🧑</div>
+      <h3>适合人群</h3>
+      <p>从资深球迷到入门观众，均可快速定位自己关心的球队、比赛和票务须知。信息层级清晰。</p>
+      <span class="tag">入门&进阶</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>实用场景</h3>
+      <p>赛前战术预览、实时积分、历史对阵数据参考。页面轻量，移动端与桌面均可顺畅浏览。</p>
+      <span class="tag">现场&远程</span>
+    </div>
+  </div>
+
+  <!-- 用途卡片 (差异化布局) -->
+  <div class="section-label"><span>📌 核心用途</span></div>
+  <div class="purpose-grid">
+    <div class="purpose-item">
+      <h4>🧭 快速定位信息</h4>
+      <p>无需在海量新闻中筛选。赛程、分组、球队档案聚合一处，结构接近卡片式目录。</p>
+    </div>
+    <div class="purpose-item">
+      <h4>📊 数据轻量化</h4>
+      <p>每场比赛时间、场地、对阵采用精简卡片呈现，减少加载负担，重点内容一目了然。</p>
+    </div>
+    <div class="purpose-item">
+      <h4>🗓️ 日程参考</h4>
+      <p>从小组赛到决赛，关键节点均标记为时间线。支持自定义筛选关注球队与城市。</p>
+    </div>
+    <div class="purpose-item">
+      <h4>🌐 语言与本地化</h4>
+      <p>中文团队维护，术语对照表与球队别称同步更新，降低非英语用户的阅读门槛。</p>
+    </div>
+  </div>
+
+  <!-- 自然链接段落 (a标签文本必须严格等于 世界杯) -->
+  <div class="highlight-link">
+    <p>如果你正在寻找一个整合型的信息起点，<a href="https://chinazh-fifa2026.com">世界杯</a>内容页将赛程、场馆和参赛队条目整理为可检索模块，适合赛前快速查阅。</p>
+  </div>
+
+  <!-- FAQ 摘要 -->
+  <div class="faq-mini">
+    <h3>❓ 常见问题摘要</h3>
+    <details>
+      <summary>网站覆盖哪些赛事阶段？</summary>
+      <p>从预选赛部分数据到决赛阶段，分组与淘汰赛信息持续更新。页面以官方公布为准。</p>
+    </details>
+    <details>
+      <summary>是否包含票务与观赛指南？</summary>
+      <p>提供官方票务渠道链接与场馆基础信息，但不直接售票。建议通过授权平台购票。</p>
+    </details>
+    <details>
+      <summary>移动端浏览体验如何？</summary>
+      <p>卡片式布局针对手机屏幕优化，字体与间距自适应，横向滚动极少，重点内容前置。</p>
+    </details>
+    <details>
+      <summary>数据更新频率？</summary>
+      <p>比赛日前一周每日刷新，非比赛日每周两次。重大抽签或名单公布后即时补充。</p>
+    </details>
+  </div>
+
+  <!-- 辅助链接段落，不包含“进入/点击/访问”等词，且文本等于“世界杯” (第二个链接，位置自然) -->
+  <p style="font-size: 0.95rem; margin: 1.2rem 0 0.3rem; color: #2b4b57;">若需了解本届赛事申办背景与城市介绍，可查阅 <a href="https://chinazh-fifa2026.com">世界杯</a> 相关条目，信息基于官方资料整理。</p>
+
+  <div class="footer-note">
+    <span>信息卡片 · 简洁专业 · chinazh-fifa2026</span>
+  </div>
+</div>
+</body>
+</html>
